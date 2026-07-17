@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+langchain
+langchain-experimental
+langchain-openai
+langchain-google-genai
+langchain-groq
+python-dotenv
+pandas
+pydantic
+pydantic-settings
