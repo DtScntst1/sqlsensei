@@ -4,8 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, text
 from langchain_community.utilities import SQLDatabase
 from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain.chains import create_sql_query_chain
+from langchain_groq import ChatGroq
+from langchain_core.output_parsers import StrOutputParser
 import os
 import json
 from dotenv import load_dotenv
@@ -66,15 +66,22 @@ async def generate_sql_and_chart(req: QueryRequest):
     if not req.api_key:
         raise HTTPException(status_code=400, detail="API Key is required")
     
-    os.environ["OPENAI_API_KEY"] = req.api_key
+    os.environ["GROQ_API_KEY"] = req.api_key
     
     try:
         db = SQLDatabase.from_uri(DB_PATH)
-        llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+        llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
         
-        # 1. Generate SQL
-        chain = create_sql_query_chain(llm, db)
-        sql_query = chain.invoke({"question": req.question})
+        # 1. Generate SQL via custom LCEL
+        schema = db.get_table_info()
+        sql_prompt = PromptTemplate.from_template(
+            "You are a SQLite expert. Given the database schema below, write a syntactically correct SQLite query that answers the question.\n"
+            "Return ONLY the SQL query, without any markdown or code blocks.\n\n"
+            "Schema:\n{schema}\n\n"
+            "Question: {question}\nSQL Query:"
+        )
+        sql_chain = sql_prompt | llm | StrOutputParser()
+        sql_query = sql_chain.invoke({"schema": schema, "question": req.question})
         
         # Clean markdown formatting from sql_query if any
         if sql_query.startswith("```sql"):

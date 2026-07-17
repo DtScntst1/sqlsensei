@@ -13,7 +13,7 @@ function App() {
 
   const handleAsk = async () => {
     if (!apiKey) {
-      setError('Please enter your OpenAI API Key.');
+      setError('Please enter your free Groq API Key.');
       return;
     }
     if (!question) {
@@ -51,7 +51,7 @@ function App() {
           <FiKey size={24} color="var(--accent-purple)" />
           <input 
             type="password" 
-            placeholder="sk-... (Enter your OpenAI API Key)" 
+            placeholder="gsk_... (Enter your free Groq API Key)" 
             value={apiKey} 
             onChange={(e) => setApiKey(e.target.value)} 
           />
