@@ -36,9 +36,8 @@
 
 ## 📸 Sneak Peek
 
-*(Add your awesome demo screenshot or GIF here!)*
 <div align="center">
-  <img src="https://via.placeholder.com/800x450/1a1a2e/ffffff?text=SQLSensei+Demo+Screenshot+Goes+Here" alt="SQLSensei Demo" width="800"/>
+  <img src="./assets/demo.png" alt="SQLSensei Demo" width="800"/>
 </div>
 
 ---
