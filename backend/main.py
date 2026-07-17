@@ -57,6 +57,10 @@ def init_db():
 def startup():
     init_db()
 
+@app.get("/")
+def read_root():
+    return {"message": "SQLSensei API is running! 🚀", "docs": "Go to /docs to test the API."}
+
 class QueryRequest(BaseModel):
     question: str
     api_key: str
